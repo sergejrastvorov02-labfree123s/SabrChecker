@@ -1,0 +1,175 @@
+﻿<Window x:Class="SabrChecker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SabrChecker" Height="550" Width="900" 
+        Background="#0A0A0A" WindowStyle="None" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+    
+    <Window.Resources>
+        <Style x:Key="NavButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="BorderThickness" Value="0,0,3,0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1A0000"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="#FF0000"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="#0F0F0F"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF0000"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF0000"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Loading Overlay -->
+        <Grid x:Name="LoadingOverlay" Background="#0A0A0A" Panel.ZIndex="100">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                <TextBlock Text="SABR" Foreground="#FF0000" FontSize="72" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="LoadingStatus" Text="Подготовка..." Foreground="#888888" FontSize="14" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+                <ProgressBar IsIndeterminate="True" Width="300" Height="4" Margin="0,15,0,0" Foreground="#FF0000" Background="#222"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Левое меню -->
+        <Border Grid.Column="0" Background="#050505" BorderBrush="#111" BorderThickness="0,0,1,0">
+            <StackPanel>
+                <TextBlock Text="SABR CHECKER" Foreground="#FF0000" FontSize="20" FontWeight="Bold" Margin="0,30,0,40" HorizontalAlignment="Center"/>
+                <Button Content="ИНФОРМАЦИЯ" Style="{StaticResource NavButton}" Tag="TabInfo" Click="SwitchTab"/>
+                <Button Content="ПРИЛОЖЕНИЯ" Style="{StaticResource NavButton}" Tag="TabApps" Click="SwitchTab"/>
+                <Button Content="STEAM" Style="{StaticResource NavButton}" Tag="TabSteam" Click="SwitchTab"/>
+                <Button Content="СИСТЕМА" Style="{StaticResource NavButton}" Tag="TabSys" Click="SwitchTab"/>
+                <Button Content="НАСТРОЙКИ" Style="{StaticResource NavButton}" Tag="TabSettings" Click="SwitchTab"/>
+                <Button Content="ВЫХОД" Style="{StaticResource NavButton}" Margin="0,50,0,0" Click="ExitApp" BorderBrush="Gray"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Основная область -->
+        <Grid Grid.Column="1" Margin="25">
+            
+            <!-- Tab: Info -->
+            <StackPanel x:Name="TabInfo" Visibility="Visible">
+                <TextBlock Text="ИНФОРМАЦИЯ" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+                <Rectangle Height="2" Fill="#FF0000" HorizontalAlignment="Left" Width="50" Margin="0,0,0,20"/>
+                <TextBlock Text="STATUS: ACTIVE" Foreground="#00FF00" FontSize="16" FontWeight="Bold" Margin="0,5"/>
+                <TextBlock Text="Version: 1.0.5 Private" Foreground="Gray" Margin="0,5"/>
+                <TextBlock Text="Добро пожаловать в SabrChecker. Используйте боковое меню для навигации по модулям." Foreground="#AAA" Margin="0,20" TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <!-- Tab: Apps -->
+            <Grid x:Name="TabApps" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="150"/>
+                </Grid.RowDefinitions>
+                <UniformGrid Columns="3">
+                    <Button Content="Everything" Style="{StaticResource ActionBtn}" Click="LaunchApp" Tag="Everything.exe"/>
+                    <Button Content="ShellBags" Style="{StaticResource ActionBtn}" Click="LaunchApp" Tag="ShellBagsView.exe"/>
+                    <Button Content="Downloads" Style="{StaticResource ActionBtn}" Click="LaunchApp" Tag="BrowserDownloadsView.exe"/>
+                    <Button Content="USBDeview" Style="{StaticResource ActionBtn}" Click="LaunchApp" Tag="USBDeview.exe"/>
+                    <Button Content="LastActivity" Style="{StaticResource ActionBtn}" Click="LaunchApp" Tag="LastActivityView.exe"/>
+                    <Button Content="ProcessHacker" Style="{StaticResource ActionBtn}" Click="LaunchApp" Tag="ProcessHacker.exe"/>
+                </UniformGrid>
+                <Grid Grid.Row="2" Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="BoxM1" Grid.Column="0" Margin="5" Background="#080808" Foreground="#00FF00" BorderBrush="#300000" IsReadOnly="True" VerticalScrollBarVisibility="Auto" FontSize="11"/>
+                    <TextBox x:Name="BoxM2" Grid.Column="1" Margin="5" Background="#080808" Foreground="#00FF00" BorderBrush="#300000" IsReadOnly="True" VerticalScrollBarVisibility="Auto" FontSize="11"/>
+                </Grid>
+            </Grid>
+
+            <!-- Tab: Steam -->
+            <StackPanel x:Name="TabSteam" Visibility="Collapsed">
+                <TextBlock Text="STEAM" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+                <Rectangle Height="2" Fill="#FF0000" HorizontalAlignment="Left" Width="50" Margin="0,0,0,20"/>
+                <Border Background="#0F0F0F" Padding="20" BorderBrush="#FF0000" BorderThickness="1" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle x:Name="SteamAvatar" Width="100" Height="100" Fill="#FF0000"/>
+                        <StackPanel Margin="20,0">
+                            <TextBlock x:Name="SteamNick" Text="SabrUser" Foreground="White" FontSize="22" FontWeight="Bold"/>
+                            <TextBlock x:Name="SteamID" Text="SteamID64: 7656119XXXXXXXX" Foreground="Gray" Margin="0,5"/>
+                            <TextBlock Text="BAN STATUS: CLEAN" Foreground="#00FF00" FontWeight="Bold" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Tab: System -->
+            <StackPanel x:Name="TabSys" Visibility="Collapsed">
+                <TextBlock Text="СИСТЕМА" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+                <Rectangle Height="2" Fill="#FF0000" HorizontalAlignment="Left" Width="50" Margin="0,0,0,20"/>
+                <TextBlock x:Name="TxtCPU" Text="CPU: ..." Foreground="White" Margin="0,10"/>
+                <TextBlock x:Name="TxtGPU" Text="GPU: ..." Foreground="White" Margin="0,10"/>
+                <TextBlock x:Name="TxtRAM" Text="RAM: ..." Foreground="White" Margin="0,10"/>
+                <Separator Background="#333" Margin="0,20"/>
+                <TextBlock x:Name="TxtOBS" Text="OBS STATUS: CHECKING..." Foreground="Gray" FontSize="18" FontWeight="Bold"/>
+                <Button Content="ОБНОВИТЬ ДАННЫЕ" Style="{StaticResource ActionBtn}" Width="180" HorizontalAlignment="Left" Margin="0,30" Click="RefreshSysInfo"/>
+            </StackPanel>
+
+            <!-- Tab: Settings -->
+            <StackPanel x:Name="TabSettings" Visibility="Collapsed">
+                <TextBlock Text="НАСТРОЙКИ" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+                <Rectangle Height="2" Fill="#FF0000" HorizontalAlignment="Left" Width="50" Margin="0,0,0,20"/>
+                <TextBlock Text="ПУТЬ К ЧЕКЕРУ" Foreground="Gray" FontSize="10"/>
+                <TextBox x:Name="PathBox" Background="#111" Foreground="White" BorderBrush="#333" Padding="8" Margin="0,5,0,20"/>
+                <Button Content="OPEN LOGS" Style="{StaticResource ActionBtn}" Width="180" HorizontalAlignment="Left" Click="OpenLogsFolder"/>
+                <TextBlock Text="СОЦСЕТИ" Foreground="Gray" Margin="0,30,0,10" FontSize="10"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="GitHub" Style="{StaticResource ActionBtn}" Width="100" Click="OpenGitHub"/>
+                    <Button Content="Telegram" Style="{StaticResource ActionBtn}" Width="100" Click="OpenTelegram"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
